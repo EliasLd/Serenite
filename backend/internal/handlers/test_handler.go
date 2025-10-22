@@ -1,16 +1,14 @@
 package handlers
 
 import (
-	"fmt"
+	"encoding/json"
 	"net/http"
 )
 
 // Handles the /test endpoint
 func TestHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodGet {
-		fmt.Fprintln(w, "Test endpoint works!")
-		return
-	}
-
-	http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{
+		"message": "Test endpoint works!",
+	})
 }
