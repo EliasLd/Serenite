@@ -24,6 +24,7 @@ func main() {
 	if err := db.ConnectDB(); err != nil {
 		log.Fatalf("Failed to connect to the database: %v", err)
 	}
+	log.Print("Successfully connected to the database")
 	defer db.DB.Close()
 
 	r := router.SetupRouter()
