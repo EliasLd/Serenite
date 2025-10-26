@@ -8,23 +8,27 @@ import (
 	_ "github.com/lib/pq"
 )
 
+// global databse connection pool
+var DB *sql.DB
+
 // Establishes a connection to the database
-func ConnectDB() (*sql.DB, error) {
+func ConnectDB() error {
 	connStr := os.Getenv("DB_CONN_STRING")
 	if connStr == "" {
-		return nil, fmt.Errorf("DB_CONN_STRING not set in environment variables")
+		return fmt.Errorf("DB_CONN_STRING not set in environment variables")
 	}
 
-	db, err := sql.Open("postgres", connStr)
+	var err error
+	DB, err = sql.Open("postgres", connStr)
 	if err != nil {
-		return nil, fmt.Errorf("Failed to open databse connection: %w", err)
+		return fmt.Errorf("Failed to open databse connection: %w", err)
 	}
 
 	// Actually test the connection
-	if err := db.Ping(); err != nil {
-		return nil, fmt.Errorf("Failed to connect to the database: %w", err)
+	if err := DB.Ping(); err != nil {
+		return fmt.Errorf("Failed to connect to the database: %w", err)
 	}
 
 	fmt.Println("Successfully connected to the database")
-	return db, nil
+	return nil
 }

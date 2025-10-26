@@ -21,11 +21,10 @@ func main() {
 	}
 
 	// Connect to the database
-	conn, err := db.ConnectDB()
-	if err != nil {
+	if err := db.ConnectDB(); err != nil {
 		log.Fatalf("Failed to connect to the database: %v", err)
 	}
-	defer conn.Close()
+	defer db.DB.Close()
 
 	r := router.SetupRouter()
 
