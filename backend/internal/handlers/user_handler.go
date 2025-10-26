@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 	"strings"
+
+	"github.com/EliasLd/Serenite/internal/db"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type RegisterRequest struct {
@@ -36,14 +39,29 @@ func HandleRegisterUser(w http.ResponseWriter, r *http.Request) {
 	}
 	// TODO: Add email format check, password strenght...
 
-	// TODO: Hash the password
+	// Hash the password
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	if err != nil {
+		http.Error(w, "Failed to hash password", http.StatusInternalServerError)
+		return
+	}
 
-	// TODO: Check for existing username/email in DB
-	// TODO: Create the user in the database
+	// Check for existing username/email in DB
+	exists, err := db.UserExists(req.Username, req.Email)
+	if err != nil {
+		http.Error(w, "Database error when checking if user already exists", http.StatusInternalServerError)
+		return
+	}
+	if exists {
+		http.Error(w, "Username or email already taken", http.StatusConflict)
+		return
+	}
 
-	// place holder user ID
-	// TODO: Replace this with actual DB returned ID
-	userID := 1
+	// Create the user in the database
+	userID, err := db.CreateUser(req.Username, req.Email, string(hashedPassword))
+	if err != nil {
+		http.Error(w, "Could not create user", http.StatusInternalServerError)
+	}
 
 	resp := RegisterResponse{
 		ID:       userID,
