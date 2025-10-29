@@ -3,7 +3,6 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	"os"
 
 	_ "github.com/lib/pq"
 )
@@ -12,8 +11,7 @@ import (
 var DB *sql.DB
 
 // Establishes a connection to the database
-func ConnectDB() error {
-	connStr := os.Getenv("DB_CONN_STRING")
+func ConnectDB(connStr string) error {
 	if connStr == "" {
 		return fmt.Errorf("DB_CONN_STRING not set in environment variables")
 	}

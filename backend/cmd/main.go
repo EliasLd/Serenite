@@ -6,30 +6,25 @@ import (
 	"github.com/EliasLd/Serenite/internal/router"
 	"log"
 	"net/http"
-	"os"
 )
 
 func main() {
 	// Load environment variables configuration
-	config.LoadConfig()
-
-	// Load the serving PORT from environment variables
-	port := os.Getenv("PORT")
-	if port == "" {
-		// Default to 8080 port if not set
-		port = "8080"
+	cfg := config.LoadConfig()
+	if err := cfg.Validate(); err != nil {
+		log.Fatal("Configuration validation failed:", err)
 	}
 
 	// Connect to the database
-	if err := db.ConnectDB(); err != nil {
+	if err := db.ConnectDB(cfg.DBConnString); err != nil {
 		log.Fatalf("Failed to connect to the database: %v", err)
 	}
 	log.Print("Successfully connected to the database")
 	defer db.DB.Close()
 
-	r := router.SetupRouter()
+	r := router.SetupRouter(cfg)
 
 	// Start the server
-	log.Printf("Server is running on port %s...", port)
-	log.Fatal(http.ListenAndServe(":"+port, r))
+	log.Printf("Server is running on port %s...", cfg.Port)
+	log.Fatal(http.ListenAndServe(":"+cfg.Port, r))
 }
