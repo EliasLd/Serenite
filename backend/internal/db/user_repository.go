@@ -38,3 +38,19 @@ func CreateUser(username, email, passwordHash string) (int, error) {
 
 	return userID, nil
 }
+
+// Retrieves a user from the db and returns its infos
+func GetUserbyEmail(email string) (int, string, string, string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	var id int
+	var username, emailVal, passwordHash string
+	query := `SELECT id, username, email, password_hash FROM users WHERE email = $1`
+	err := DB.QueryRowContext(ctx, query, email).Scan(&id, &username, &emailVal, &passwordHash)
+	if err != nil {
+		return 0, "", "", "", err
+	}
+	return id, username, emailVal, passwordHash, nil
+}
+
