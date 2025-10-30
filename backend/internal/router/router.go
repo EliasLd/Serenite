@@ -10,12 +10,11 @@ import (
 // Initializes the HTTP router and routes
 func SetupRouter(cfg *config.Config) http.Handler {
 	mux := http.NewServeMux()
-
 	// Test endpoint
 	mux.HandleFunc("/test", handlers.TestHandler)
-
-	// New registration endpoint
+	// Auth
 	mux.HandleFunc("POST /api/register", handlers.HandleRegisterUser)
-// Wrap the router with CORS middleware
+	mux.HandleFunc("POST /api/login", handlers.HandleLoginUser(cfg))
+	// Wrap the router with CORS middleware
 	return middleware.CORS(mux)
 }
