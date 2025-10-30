@@ -5,25 +5,11 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"testing"
 
-	"github.com/EliasLd/Serenite/config"
 	"github.com/EliasLd/Serenite/internal/db"
 	"github.com/EliasLd/Serenite/internal/testutil"
 )
-
-// Runs once before all tests in this package
-func TestMain(m *testing.M) {
-	// Load configuration for environment variables
-	config.LoadConfig()
-	// Run all tests
-	code := m.Run()
-
-	testutil.TeardownTestDB()
-
-	os.Exit(code)
-}
 
 func TestHandleRegisterUser_Success(t *testing.T) {
 	// Setup test database
