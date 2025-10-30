@@ -29,7 +29,6 @@ func HandleRegisterUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Validation
 	req.Username = strings.TrimSpace(req.Username)
 	req.Email = strings.TrimSpace(req.Email)
 	req.Password = strings.TrimSpace(req.Password)
@@ -37,16 +36,13 @@ func HandleRegisterUser(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "All fields are required", http.StatusBadRequest)
 		return
 	}
-	// TODO: Add email format check, password strenght...
 
-	// Hash the password
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
 		http.Error(w, "Failed to hash password", http.StatusInternalServerError)
 		return
 	}
 
-	// Check for existing username/email in DB
 	exists, err := db.UserExists(req.Username, req.Email)
 	if err != nil {
 		http.Error(w, "Database error when checking if user already exists", http.StatusInternalServerError)
@@ -57,10 +53,10 @@ func HandleRegisterUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Create the user in the database
 	userID, err := db.CreateUser(req.Username, req.Email, string(hashedPassword))
 	if err != nil {
 		http.Error(w, "Could not create user", http.StatusInternalServerError)
+		return
 	}
 
 	resp := RegisterResponse{
@@ -71,5 +67,4 @@ func HandleRegisterUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(resp)
-
 }
