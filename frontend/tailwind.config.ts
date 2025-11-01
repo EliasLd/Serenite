@@ -5,7 +5,17 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        sereniteBg: "#000000",
+        sereniteAccent: "#008001",
+        sereniteCard: "#1E1E1E",
+        sereniteText: "#EEEEEE",
+      },
+      fontFamily: {
+        dmmono: ['DM Mono', 'monospace'],
+      },
+    },
   },
   plugins: [],
-}
+};
