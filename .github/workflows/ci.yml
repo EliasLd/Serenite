@@ -11,16 +11,46 @@ jobs:
       run:
         working-directory: ./backend
 
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: serenite_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
     steps:
       - uses: actions/checkout@v4
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.23'
+          go-version: "1.23"
       - name: Install Go dependencies
         run: go mod download
+
+        # Install golang-migrate for running migrations
+      - name: Install golang-migrate
+        run: |
+          curl -L https://github.com/golang-migrate/migrate/releases/download/v4.17.0/migrate.linux-amd64.tar.gz | tar xvz
+          sudo mv migrate /usr/local/bin/
+          migrate -version
+
+      # Run database migrations
+      - name: Run migrations
+        run: migrate -path ../migrations -database "postgresql://test_user:test_password@localhost:5432/serenite_test?sslmode=disable" up
+
       - name: Run Go tests
-        run: go test ./...
+        env:
+          TEST_DB_CONN_STRING: "postgresql://test_user:test_password@localhost:5432/serenite_test?sslmode=disable"
+        run: go test ./... -v
+
       - name: Build backend binary
         run: go build ./cmd/main.go
 
@@ -28,21 +58,21 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory:  ./frontend
+        working-directory: ./frontend
     steps:
       - uses: actions/checkout@v4
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
       - name: Install npm dependencies
-        run:  npm ci
+        run: npm ci
       - name: Run frontend build
-        run:  npm run build
+        run: npm run build
 
   docker:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Build Docker images
-        run:  docker compose build
+        run: docker compose build
