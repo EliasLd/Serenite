@@ -1,6 +1,6 @@
-export default function HeroSection({ className = "" }: { className?: string }) {
+export default function HeroSection() {
   return (
-    <section className={`w-full flex flex-col items-center justify-center py-8 md:py-20 px-4 sm:px-8 md:px-0 ${className}`}>
+    <section className={`w-full flex flex-col items-center justify-center py-8 md:py-10 px-4 sm:px-8 `}>
       <div className="text-center flex flex-col items-center justify-center">
         <h1 className="font-dmmono text-2xl sm:text-3xl md:text-5xl text-white font-bold mb-3 md:mb-6">
           Start your journey to daily{" "}

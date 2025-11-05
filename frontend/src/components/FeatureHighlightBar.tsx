@@ -4,7 +4,7 @@ import { IoTime } from "react-icons/io5";
 export default function FeaturesHighlightBar() {
   return (
     <>
-      <section className="flex flex-col items-center px-4">
+      <section className="flex flex-col items-center px-4 mb-10">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-0 w-full max-w-3xl rounded-xl overflow-hidden shadow-lg">
           <div className="flex flex-col items-center p-5 bg-green-900/70 border-r border-neutral-800">
             <FaSmile className="text-2xl text-green-400 mb-2" />

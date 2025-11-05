@@ -1,7 +1,7 @@
 export default function CTASection() {
   return (
-    <section className="flex flex-col items-center justify-center mt-12 px-4">
-      <h2 className="text-2xl md:text-3xl font-bold text-white text-center mb-3">
+    <section className="flex flex-col items-center justify-center px-4">
+      <h2 className="text-xl md:text-3xl font-bold text-white text-center mb-3">
         Make every day a little brighter
       </h2>
       <p className="text-neutral-300 text-center mb-6 max-w-lg">
