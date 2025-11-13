@@ -88,12 +88,6 @@ export default function Register() {
           </div>
         </form>
       </div>
-      <div className="mt-6 text-xs text-center text-sereniteText">
-        Have an account?
-        <a href="#" className="text-sereniteAccent ml-1 hover:underline">
-          Sign in
-        </a>
-      </div>
     </div>
   );
 }

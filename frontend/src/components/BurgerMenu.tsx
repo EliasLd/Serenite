@@ -29,8 +29,8 @@ export default function BurgerMenu({ isLoggedIn }: BurgerMenuProps) {
               <Link to="/entries" className="text-sereniteCard font-dmmono" onClick={() => setOpen(false)}>Entries</Link>
             ) : (
               <>
-                <Link to="/login" className="text-sereniteCard font-dmmono text-sm" onClick={() => setOpen(false)}>Login</Link>
-                <Link to="/register" className="text-sereniteAccent font-dmmono text-sm" onClick={() => setOpen(false)}>Register</Link>
+                <Link to="/auth?mode=login" className="text-sereniteCard font-dmmono text-sm" onClick={() => setOpen(false)}>Login</Link>
+                <Link to="/auth?mode=register" className="text-sereniteAccent font-dmmono text-sm" onClick={() => setOpen(false)}>Register</Link>
               </>
             )}
           </nav>

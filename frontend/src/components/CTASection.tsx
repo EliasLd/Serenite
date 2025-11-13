@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function CTASection() {
   return (
     <section className="flex flex-col items-center justify-center px-4">
@@ -10,12 +12,12 @@ export default function CTASection() {
       <p className="text-sereniteTextLight text-center mb-6 max-w-lg">
         Create your free account and begin reflecting, tracking, and spreading positivity with Serenité.
       </p>
-      <a
-        href="/register"
+      <Link
+        to="/auth?mode=register"
         className="bg-sereniteAccent hover:bg-sereniteAccent/80 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-colors ease-in-out duration-200"
       >
         Get Started
-      </a>
+      </Link>
     </section>
   );
 }

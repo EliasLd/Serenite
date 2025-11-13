@@ -62,12 +62,6 @@ export default function Login() {
           </div>
         </form>
       </div>
-      <div className="mt-6 text-xs text-center text-sereniteText">
-        Don't have an account?
-        <a href="#" className="text-sereniteAccent ml-1 hover:underline">
-          Register
-        </a>
-      </div>
     </div>
   );
 }
