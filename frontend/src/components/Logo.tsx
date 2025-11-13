@@ -8,7 +8,7 @@ export default function Logo({ size = "text-3xl", variant = "full", className = 
   if (variant === "compact") {
     return (
       <span className={`font-dmmono font-bold ${size} ${className}`}>
-        <span className="text-white">S</span>
+        <span className="text-sereniteCard">S</span>
         <span className="text-sereniteAccent inline-block" style={{ transform: "rotate(-10deg)" }}>
           É
         </span>
@@ -17,7 +17,7 @@ export default function Logo({ size = "text-3xl", variant = "full", className = 
   }
   return (
     <span className={`font-dmmono font-bold ${size} ${className}`}>
-      <span className="text-white">Serenit</span>
+      <span className="text-sereniteCard">Serenit</span>
       <span className="text-sereniteAccent inline-block" style={{ transform: "rotate(-10deg)" }}>
         É
       </span>

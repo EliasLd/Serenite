@@ -7,10 +7,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        sereniteBg: "#000000",
-        sereniteAccent: "#008001",
-        sereniteCard: "#1E1E1E",
-        sereniteText: "#EEEEEE",
+        sereniteBg: "#C3BEF7",
+        sereniteAccent: "#EDD382",
+        sereniteCard: "#EDE6F2",
+        sereniteText: "#074F57",
+        sereniteFeature: "#BFDBF7",
+        sereniteDetail: "#6D597A",
+        sereniteTextLight: "#FFF",
       },
       fontFamily: {
         dmmono: ['DM Mono', 'monospace'],
