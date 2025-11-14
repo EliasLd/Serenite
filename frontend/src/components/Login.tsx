@@ -36,14 +36,14 @@ export default function Login() {
 
   return (
     <div>
-      <div className="p-4 border-sereniteText rounded-lg bg-sereniteCard max-w-sm mx-auto">
+      <div className="p-4 border-sereniteText rounded-lg bg-sereniteDetail max-w-sm mx-auto">
         <form onSubmit={handleSubmit} className="space-y-6 my-3 px-5 text-white">
           <input
             name="email"
             value={form.email}
             onChange={handleChange}
             placeholder="Email"
-            className="w-full border-b border-b-zinc-600 p-2 bg-sereniteCard"
+            className="w-full border-b border-b-zinc-600 p-2 bg-sereniteTextLight rounded-md"
           />
           <input
             name="password"
@@ -51,7 +51,7 @@ export default function Login() {
             value={form.password}
             onChange={handleChange}
             placeholder="Password"
-            className="w-full border-b border-b-zinc-600 p-2 bg-sereniteCard"
+            className="w-full border-b border-b-zinc-600 p-2 bg-sereniteTextLight rounded-md"
           />
           {error && <div className="text-red-600">{error}</div>}
           {success && <div className="text-green-700">{success}</div>}
