@@ -4,6 +4,8 @@ import Login from "../components/Login";
 import Register from "../components/Register";
 import Navbar from "../components/Navbar";
 
+import backgroundImg from "../assets/auth-bg.jpg";
+
 export default function Authentication() {
   const [searchParams] = useSearchParams();
   const initialMode = searchParams.get("mode") === "register" ? "register" : "login";
@@ -15,18 +17,17 @@ export default function Authentication() {
 
   return (
     <>
-      <Navbar isLoggedIn={false} />
-      <div className="min-h-screen bg-sereniteBg flex flex-col items-center justify-center px-4">
-        <div className="mb-6 text-center">
-          {mode === "login" ? (
-            <h2 className="text-2xl md:text-3xl font-bold text-sereniteTextLight">
-              Welcome back to <span className="text-sereniteDetail underline">Serenité</span>
-            </h2>
-          ) : (
-            <h2 className="text-2xl md:text-3xl font-bold text-sereniteTextLight">
-              Bring a little <span className="text-sereniteAccent">light</span> to your day
-            </h2>
-          )}
+      <div
+        className="min-h-screen flex flex-col items-center justify-center px-4 bg-cover bg-center"
+        style={{
+          backgroundImage: `url(${backgroundImg})`,
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <div className="fixed top-0 left-0 w-full z-10">
+          <Navbar isLoggedIn={false} />
         </div>
         <div className="w-full max-w-md">
           {mode === "login" ? (
