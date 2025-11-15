@@ -22,7 +22,7 @@ export default function BurgerMenu({ isLoggedIn }: BurgerMenuProps) {
         </div>
       </button>
       {open && (
-        <div className="absolute right-0 mt-2 w-48 bg-sereniteText border border-sereniteBg rounded-xl shadow-lg z-50 py-2">
+        <div className="absolute right-0 mt-2 w-48 bg-sereniteText rounded-xl shadow-lg z-50 py-2">
           <nav className="flex flex-col gap-2 items-start px-4">
             <Link to="/about" className="text-sereniteCard font-dmmono" onClick={() => setOpen(false)}>About</Link>
             {isLoggedIn ? (
