@@ -38,10 +38,10 @@ export default function Navbar({ isLoggedIn }: NavbarProps) {
         <div className="hidden md:flex items-center gap-4">
           {!isLoggedIn ? (
             <>
-              <Link to="/login" className="text-white font-dmmono text-sm">
+              <Link to="/auth?mode=login" className="text-white font-dmmono text-sm">
                 Login
               </Link>
-              <Link to="/register">
+              <Link to="/auth?mode=register">
                 <ContextButton className="px-4 py-1 text-sm bg-sereniteDetail text-white">
                   Register
                 </ContextButton>

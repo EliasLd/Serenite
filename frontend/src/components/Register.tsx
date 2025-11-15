@@ -47,21 +47,29 @@ export default function Register() {
 
   return (
     <div>
-      <div className="p-4 border-sereniteText rounded-lg bg-sereniteCard max-w-sm mx-auto">
-        <form onSubmit={handleSubmit} className="space-y-6 my-3 px-5 text-white">
+      <div className="p-4 rounded-lg max-w-sm mx-auto
+    bg-sereniteDetail/40 
+    backdrop-blur-md
+    shadow-lg">
+        <form onSubmit={handleSubmit} className="space-y-6 my-3 px-5 text-sereniteText">
+          <div className="mb-2 text-xl font-bold text-center text-sereniteTextLight">
+            Create your account and start your journey!
+          </div>
+          <div className="w-full h-px bg-sereniteCard mb-5" />
+
           <input
             name="username"
             value={form.username}
             onChange={handleChange}
             placeholder="Username"
-            className="w-full border-b border-b-zinc-600 p-2 bg-sereniteCard"
+            className="w-full p-2 bg-sereniteTextLight rounded-md"
           />
           <input
             name="email"
             value={form.email}
             onChange={handleChange}
             placeholder="Email"
-            className="w-full border-b border-b-zinc-600 p-2 bg-sereniteCard"
+            className="w-full p-2 bg-sereniteTextLight rounded-md"
           />
           <input
             name="password"
@@ -69,7 +77,7 @@ export default function Register() {
             value={form.password}
             onChange={handleChange}
             placeholder="Password"
-            className="w-full border-b border-b-zinc-600 p-2 bg-sereniteCard"
+            className="w-full p-2 bg-sereniteTextLight rounded-md"
           />
           <input
             name="confirmPassword"
@@ -77,7 +85,7 @@ export default function Register() {
             value={form.confirmPassword}
             onChange={handleChange}
             placeholder="Confirm Password"
-            className="w-full border-b border-b-zinc-600 p-2 bg-sereniteCard"
+            className="w-full p-2 bg-sereniteTextLight rounded-md"
           />
           {error && <div className="text-red-600">{error}</div>}
           {success && <div className="text-green-700">{success}</div>}
@@ -87,12 +95,6 @@ export default function Register() {
             </ContextButton>
           </div>
         </form>
-      </div>
-      <div className="mt-6 text-xs text-center text-sereniteText">
-        Have an account?
-        <a href="#" className="text-sereniteAccent ml-1 hover:underline">
-          Sign in
-        </a>
       </div>
     </div>
   );
