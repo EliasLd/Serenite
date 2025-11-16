@@ -24,3 +24,41 @@ type EntryRepository interface {
 	GetEntryByDate(cts context.Context, userID int, entryDate time.Time) (*Entry, error)
 	CreateEntry(ctx context.Context, entry *Entry) error
 }
+
+func ListEntries(ctx context.Context, userID int) ([]*Entry, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := `
+		SELECT id, user_id, entry_date, thing_1, why_1, thing_2, why_2, thing3, why_3, created_at, updated_at
+		FROM entrie
+		WHERE user_id = $1
+		ORDER BY entry_date DESC
+	`
+	rows, err := DB.QueryContext(ctx, query, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var entries []*Entry
+	for rows.Next() {
+		var entry Entry
+		err := rows.Scan(
+			&entry.ID, &entry.UserID, &entry.EntryDate,
+			&entry.Thing1, &entry.Why1,
+			&entry.Thing2, &entry.Why2,
+			&entry.Thing3, &entry.Why3,
+			&entry.CreatedAt, &entry.UpdatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+		entries = append(entries, &entry)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return entries, nil
+
+}
