@@ -21,12 +21,12 @@ type Entry struct {
 }
 
 type EntryRepository interface {
-	ListEntries(ctx context.Context, userID int) ([]*Entry, error)
-	GetEntryByDate(ctx context.Context, userID int, entryDate time.Time) (*Entry, error)
-	CreateEntry(ctx context.Context, entry *Entry) error
+	ListEntries(userID int) ([]*Entry, error)
+	GetEntryByDate(userID int, entryDate time.Time) (*Entry, error)
+	CreateEntry(entry *Entry) error
 }
 
-func ListEntries(ctx context.Context, userID int) ([]*Entry, error) {
+func ListEntries(userID int) ([]*Entry, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
@@ -64,7 +64,7 @@ func ListEntries(ctx context.Context, userID int) ([]*Entry, error) {
 
 }
 
-func GetEntryByDate(ctx context.Context, userID int, entryDate time.Time) (*Entry, error) {
+func GetEntryByDate(userID int, entryDate time.Time) (*Entry, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
