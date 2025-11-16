@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"database/sql"
 	"time"
 )
 
@@ -21,7 +22,7 @@ type Entry struct {
 
 type EntryRepository interface {
 	ListEntries(ctx context.Context, userID int) ([]*Entry, error)
-	GetEntryByDate(cts context.Context, userID int, entryDate time.Time) (*Entry, error)
+	GetEntryByDate(ctx context.Context, userID int, entryDate time.Time) (*Entry, error)
 	CreateEntry(ctx context.Context, entry *Entry) error
 }
 
@@ -61,4 +62,30 @@ func ListEntries(ctx context.Context, userID int) ([]*Entry, error) {
 	}
 	return entries, nil
 
+}
+
+func GetEntryByDate(ctx context.Context, userID int, entryDate time.Time) (*Entry, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	var entry Entry
+	query := `
+		SELECT id, user_id, entry_date, thing_1, why_1, thing_2, why_2, thing3, why_3, created_at, updated_at
+		FROM entrie
+		WHERE user_id = $1 AND entry_date = $2	
+	`
+	err := DB.QueryRowContext(ctx, query, userID, entryDate).Scan(
+		&entry.ID, &entry.UserID, &entry.EntryDate,
+		&entry.Thing1, &entry.Why1,
+		&entry.Thing2, &entry.Why2,
+		&entry.Thing3, &entry.Why3,
+		&entry.CreatedAt, &entry.UpdatedAt,
+	)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	return &entry, nil
 }
