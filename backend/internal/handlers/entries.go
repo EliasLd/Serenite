@@ -4,6 +4,9 @@ import (
 	"errors"
 	"net/http"
 	"strconv"
+	"time"
+
+	"github.com/EliasLd/Serenite/internal/db"
 )
 
 type entryResponse struct {
@@ -53,6 +56,22 @@ func getUserIDFromRequest(r *http.Request) (int, error) {
 	}
 
 	return 0, errors.New("User not authenticated")
+}
+
+// Converts a db.Entry into the response shape
+func mapEntryToResponse(e *db.Entry) entryResponse {
+	return entryResponse{
+		ID:        e.ID,
+		EntryDate: e.EntryDate.Format("2006-01-02"),
+		Thing1:    e.Thing1,
+		Why1:      e.Why1,
+		Thing2:    e.Thing2,
+		Why2:      e.Why2,
+		Thing3:    e.Thing3,
+		Why3:      e.Why3,
+		CreatedAt: e.CreatedAt.Format(time.RFC3339),
+		UpdatedAt: e.UpdatedAt.Format(time.RFC3339),
+	}
 }
 
 func ListEntriesHandler(w http.ResponseWriter, r *http.Request) {
