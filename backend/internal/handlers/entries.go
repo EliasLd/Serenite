@@ -29,6 +29,32 @@ type createEntryRequest struct {
 	Why3      string `db:"why_3"`
 }
 
+// Tries to obtain the authenticated user id.
+func getUserIDFromRequest(r *http.Request) (int, error) {
+	// Try context value
+	if v := r.Context().Value("userID"); v != nil {
+		switch id := v.(type) {
+		case int:
+			if id > 0 {
+				return id, nil
+			}
+		case string:
+			if parsed, err := strconv.Atoi(id); err == nil {
+				return parsed, nil
+			}
+		}
+	}
+
+	// Fallback to header
+	if h := r.Header.Get("X-User-ID"); h != "" {
+		if parsed, err := strconv.Atoi(h); err == nil && parsed > 0 {
+			return parsed, nil
+		}
+	}
+
+	return 0, errors.New("User not authenticated")
+}
+
 func ListEntriesHandler(w http.ResponseWriter, r *http.Request) {
 	//TODO
 }
