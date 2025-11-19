@@ -3,8 +3,10 @@ package handlers
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/EliasLd/Serenite/internal/db"
@@ -102,8 +104,70 @@ func ListEntriesHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Handles POST /api/entries
+// Accepts JSON body with the three things + reasons,
 func CreateEntryHandler(w http.ResponseWriter, r *http.Request) {
-	//TODO
+	userID, err := getUserIDFromRequest(r)
+	if err != nil {
+		http.Error(w, "unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	var req createEntryRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "invalid JSON", http.StatusBadRequest)
+		return
+	}
+
+	// Basic entry validation
+	if strings.TrimSpace(req.Thing1) == "" || strings.TrimSpace(req.Why1) == "" ||
+		strings.TrimSpace(req.Thing2) == "" || strings.TrimSpace(req.Why2) == "" ||
+		strings.TrimSpace(req.Thing3) == "" || strings.TrimSpace(req.Why3) == "" {
+		http.Error(w, "all thing_/why_ fields are required", http.StatusBadRequest)
+		return
+	}
+
+	// Determine entry date
+	var entryDate time.Time
+	if req.EntryDate == "" {
+		now := time.Now().UTC()
+		entryDate = time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.UTC)
+	} else {
+		d, err := time.Parse("2006-01-02", req.EntryDate)
+		if err != nil {
+			http.Error(w, "entry_date must be in YYYY-MM-DD format", http.StatusBadRequest)
+			return
+		}
+		entryDate = time.Date(d.Year(), d.Month(), d.Day(), 0, 0, 0, 0, time.UTC)
+	}
+
+	newEntry := &db.Entry{
+		UserID:    userID,
+		EntryDate: entryDate,
+		Thing1:    strings.TrimSpace(req.Thing1),
+		Why1:      strings.TrimSpace(req.Why1),
+		Thing2:    strings.TrimSpace(req.Thing2),
+		Why2:      strings.TrimSpace(req.Why2),
+		Thing3:    strings.TrimSpace(req.Thing3),
+		Why3:      strings.TrimSpace(req.Why3),
+	}
+
+	if err := db.CreateEntry(newEntry); err != nil {
+		// Detect unique constraint violation in a simple driver-agnostic way
+		if strings.Contains(strings.ToLower(err.Error()), "unique") || strings.Contains(strings.ToLower(err.Error()), "duplicate") {
+			http.Error(w, "entry already exists for this date", http.StatusConflict)
+		}
+		http.Error(w, "internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	resp := mapEntryToResponse(newEntry)
+	if err := json.NewEncoder(w).Encode(resp); err != nil {
+		http.Error(w, "failed to encode response", http.StatusInternalServerError)
+		return
+	}
 }
 
 func GetEntryDateHandler(w http.ResponseWriter, r *http.Request) {
