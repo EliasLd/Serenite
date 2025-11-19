@@ -170,6 +170,44 @@ func CreateEntryHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Handles GET /api/entries/{date}
 func GetEntryDateHandler(w http.ResponseWriter, r *http.Request) {
-	//TODO
+	userID, err := getUserIDFromRequest(r)
+	if err != nil {
+		http.Error(w, "unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	// path is expected to be /api/entries/<date>
+	trimmed := strings.TrimPrefix(r.URL.Path, "/api/entries/")
+	// In case there's a trailing '/'
+	trimmed = strings.TrimSuffix(trimmed, "/")
+	if trimmed == "" {
+		http.Error(w, "date not specified", http.StatusBadRequest)
+	}
+
+	// only supports format: YYYY-MM-DD
+	d, err := time.Parse("2006-01-02", trimmed)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("invalid date format: %v", err), http.StatusBadRequest)
+		return
+	}
+	entryDate := time.Date(d.Year(), d.Month(), d.Day(), 0, 0, 0, 0, time.UTC)
+
+	entry, err := db.GetEntryByDate(userID, entryDate)
+	if err != nil {
+		http.Error(w, "internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	if entry == nil {
+		http.Error(w, "entry not found", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	resp := mapEntryToResponse(entry)
+	if err := json.NewEncoder(w).Encode(resp); err != nil {
+		http.Error(w, "failed to encode response", http.StatusInternalServerError)
+	}
 }
