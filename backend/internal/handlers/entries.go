@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"errors"
 	"net/http"
 	"strconv"
@@ -74,8 +75,31 @@ func mapEntryToResponse(e *db.Entry) entryResponse {
 	}
 }
 
+// Handles GET /api/entries
+// Responds with JSON array of entries for the authenticated user,
 func ListEntriesHandler(w http.ResponseWriter, r *http.Request) {
-	//TODO
+	userID, err := getUserIDFromRequest(r)
+	if err != nil {
+		http.Error(w, "unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	entries, err := db.ListEntries(userID)
+	if err != nil {
+		http.Error(w, "internal error fetching entries", http.StatusInternalServerError)
+		return
+	}
+
+	resp := make([]entryResponse, 0, len(entries))
+	for _, e := range entries {
+		resp = append(resp, mapEntryToResponse(e))
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(resp); err != nil {
+		http.Error(w, "failed to encode response", http.StatusInternalServerError)
+		return
+	}
 }
 
 func CreateEntryHandler(w http.ResponseWriter, r *http.Request) {
