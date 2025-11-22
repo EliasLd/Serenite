@@ -3,26 +3,27 @@ package testutil
 import (
 	"database/sql"
 	"fmt"
-	"os"
 	"testing"
 
 	_ "github.com/lib/pq"
+
+	"github.com/EliasLd/Serenite/config"
 )
 
 var TestDB *sql.DB
 
 // Initializes a connection to the test database
 // Intended to be called at the start of each test
-func SetupTestDB(t *testing.T) *sql.DB {
+func SetupTestDB(t *testing.T, c *config.Config) *sql.DB {
 	if TestDB != nil {
 		return TestDB
 	}
 
 	// Use a separate test database connection string
-	connStr := os.Getenv("TEST_DB_CONN_STRING")
+	connStr := c.TestDBConnString
 	if connStr == "" {
 		// Fallback to regular connection string
-		connStr = os.Getenv("DB_CONN_STRING")
+		connStr = c.DBConnString
 		if connStr == "" {
 			t.Fatalf("TEST_DB_CONN_STRING or DB_CONN_STRING must be set to run tests")
 		}
