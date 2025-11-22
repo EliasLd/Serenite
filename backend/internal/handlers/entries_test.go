@@ -14,7 +14,7 @@ import (
 )
 
 func setupTestDBUser(t *testing.T) int {
-	db.DB = testutil.SetupTestDB(t)
+	db.DB = testutil.SetupTestDB(t, testCfg)
 	testutil.TruncateTables(t, "entries", "users")
 	var userID int
 	err := db.DB.QueryRow(

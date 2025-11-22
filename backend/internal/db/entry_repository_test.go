@@ -5,19 +5,22 @@ import (
 	"testing"
 	"time"
 
+	"github.com/EliasLd/Serenite/config"
 	"github.com/EliasLd/Serenite/internal/testutil"
 )
 
+var testCfg *config.Config
+
 // TestMain helps setup and teardown for all tests in this package.
 func TestMain(m *testing.M) {
-	testutil.SetupTestDB(nil)
+	testCfg = config.LoadConfig()
 	code := m.Run()
 	testutil.TeardownTestDB()
 	os.Exit(code)
 }
 
 func setup(t *testing.T) {
-	DB = testutil.SetupTestDB(t)
+	DB = testutil.SetupTestDB(t, testCfg)
 	testutil.TruncateTables(t, "entries", "users")
 }
 
