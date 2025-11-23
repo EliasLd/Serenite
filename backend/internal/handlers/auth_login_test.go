@@ -13,7 +13,7 @@ import (
 )
 
 func setupTestUser(t *testing.T) {
-	db.DB = testutil.SetupTestDB(t)
+	db.DB = testutil.SetupTestDB(t, testCfg)
 	testutil.TruncateTables(t, "users")
 
 	// Register the user

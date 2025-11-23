@@ -13,7 +13,7 @@ import (
 
 func TestHandleRegisterUser_Success(t *testing.T) {
 	// Setup test database
-	db.DB = testutil.SetupTestDB(t)
+	db.DB = testutil.SetupTestDB(t, testCfg)
 	defer testutil.TruncateTables(t, "users")
 
 	// Create request body
@@ -55,7 +55,7 @@ func TestHandleRegisterUser_Success(t *testing.T) {
 }
 
 func TestHandleRegisterUser_MissingFields(t *testing.T) {
-	db.DB = testutil.SetupTestDB(t)
+	db.DB = testutil.SetupTestDB(t, testCfg)
 
 	testCases := []struct {
 		name string
@@ -84,7 +84,7 @@ func TestHandleRegisterUser_MissingFields(t *testing.T) {
 }
 
 func TestHandleRegisterUser_InvalidJSON(t *testing.T) {
-	db.DB = testutil.SetupTestDB(t)
+	db.DB = testutil.SetupTestDB(t, testCfg)
 
 	req := httptest.NewRequest(http.MethodPost, "/api/register", bytes.NewReader([]byte("invalid json")))
 	req.Header.Set("Content-Type", "application/json")

@@ -8,8 +8,10 @@ import (
 	"github.com/EliasLd/Serenite/internal/testutil"
 )
 
+var testCfg *config.Config
+
 func TestMain(m *testing.M) {
-	config.LoadConfig()
+	testCfg = config.LoadConfig()
 	code := m.Run()
 	testutil.TeardownTestDB()
 	os.Exit(code)
