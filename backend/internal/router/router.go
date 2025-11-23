@@ -17,9 +17,9 @@ func SetupRouter(cfg *config.Config) http.Handler {
 	mux.HandleFunc("POST /api/login", handlers.HandleLoginUser(cfg))
 
 	// Entries
-	mux.HandleFunc("GET /api/entries", handlers.ListEntriesHandler)
-	mux.HandleFunc("POST /api/entries", handlers.CreateEntryHandler)
-	mux.HandleFunc("GET /api/entries/", handlers.GetEntryDateHandler)
+	mux.Handle("GET /api/entries", middleware.AuthMiddleware(cfg, http.HandlerFunc(handlers.ListEntriesHandler)))
+	mux.Handle("POST /api/entries", middleware.AuthMiddleware(cfg, http.HandlerFunc(handlers.CreateEntryHandler)))
+	mux.Handle("GET /api/entries/", middleware.AuthMiddleware(cfg, http.HandlerFunc(handlers.GetEntryDateHandler)))
 
 	// Wrap the router with CORS middleware
 	return middleware.CORS(mux)
