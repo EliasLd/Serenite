@@ -16,14 +16,11 @@ type Config struct {
 	Port               string
 }
 
-// .env file should be located at the backend's root directory
-var env_file_path string = "../../.env"
-
 // Loads environment variables from .env file and return a Config struct
-func LoadConfig() *Config {
+func LoadConfig(env_file_path string) *Config {
 	// Load .env file if not in container
 	if os.Getenv("DOCKER_ENV") != "true" {
-		if err := godotenv.Load("../../.env"); err != nil {
+		if err := godotenv.Load(env_file_path); err != nil {
 			log.Println("Warning: No .env file found, using system environment variables")
 		}
 	} else {

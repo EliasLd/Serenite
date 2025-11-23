@@ -11,6 +11,7 @@ import (
 )
 
 var TestDB *sql.DB
+var Env_file_path string = "../../.env"
 
 // Initializes a connection to the test database
 // Intended to be called at the start of each test

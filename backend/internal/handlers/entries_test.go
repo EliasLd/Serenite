@@ -5,12 +5,13 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
-	"strconv"
 	"testing"
 	"time"
 
 	"github.com/EliasLd/Serenite/internal/db"
+	"github.com/EliasLd/Serenite/internal/middleware"
 	"github.com/EliasLd/Serenite/internal/testutil"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 func setupTestDBUser(t *testing.T) int {
@@ -28,6 +29,18 @@ func setupTestDBUser(t *testing.T) int {
 	return userID
 }
 
+func makeTestJWT(userID int, username, email, secret string) string {
+	claims := jwt.MapClaims{
+		"user_id":  userID,
+		"username": username,
+		"email":    email,
+		"exp":      time.Now().Add(time.Hour * 1).Unix(),
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenString, _ := token.SignedString([]byte(secret))
+	return tokenString
+}
+
 func TestCreateEntryHandler_success(t *testing.T) {
 	userID := setupTestDBUser(t)
 	reqBody := createEntryRequest{
@@ -40,11 +53,14 @@ func TestCreateEntryHandler_success(t *testing.T) {
 	}
 	body, _ := json.Marshal(reqBody)
 	req := httptest.NewRequest(http.MethodPost, "/api/entries", bytes.NewReader(body))
-	req.Header.Set("X-User-ID", strconv.Itoa(userID))
+	token := makeTestJWT(userID, "entryuser", "entryuser@example.com", testCfg.JWTSecret)
+	req.Header.Set("Authorization", "Bearer "+token)
 	req.Header.Set("Content-Type", "application/json")
 	w := httptest.NewRecorder()
 
-	CreateEntryHandler(w, req)
+	handler := middleware.AuthMiddleware(testCfg, http.HandlerFunc(CreateEntryHandler))
+	handler.ServeHTTP(w, req)
+
 	if w.Code != http.StatusCreated {
 		t.Fatalf("Expected 201 Created, got %d: %s", w.Code, w.Body.String())
 	}
@@ -74,10 +90,14 @@ func TestCreateEntryHandler_DuplicateDate(t *testing.T) {
 	body, _ := json.Marshal(reqBody)
 	for i := range 2 {
 		req := httptest.NewRequest(http.MethodPost, "/api/entries", bytes.NewReader(body))
-		req.Header.Set("X-User-ID", strconv.Itoa(userID))
+		token := makeTestJWT(userID, "entryuser", "entryuser@example.com", testCfg.JWTSecret)
+		req.Header.Set("Authorization", "Bearer "+token)
 		req.Header.Set("Content-Type", "application/json")
 		w := httptest.NewRecorder()
-		CreateEntryHandler(w, req)
+
+		handler := middleware.AuthMiddleware(testCfg, http.HandlerFunc(CreateEntryHandler))
+		handler.ServeHTTP(w, req)
+
 		if i == 0 && w.Code != http.StatusCreated {
 			t.Fatalf("Expected first entry to succeed, got %d", w.Code)
 		}
@@ -122,9 +142,13 @@ func TestListEntriesHandler(t *testing.T) {
 	}
 
 	req := httptest.NewRequest(http.MethodGet, "/api/entries", nil)
-	req.Header.Set("X-User-ID", strconv.Itoa(userID))
+	token := makeTestJWT(userID, "entryuser", "entryuser@example.com", testCfg.JWTSecret)
+	req.Header.Set("Authorization", "Bearer "+token)
 	w := httptest.NewRecorder()
-	ListEntriesHandler(w, req)
+
+	handler := middleware.AuthMiddleware(testCfg, http.HandlerFunc(ListEntriesHandler))
+	handler.ServeHTTP(w, req)
+
 	if w.Code != http.StatusOK {
 		t.Fatalf("Expected 200 OK, got %d", w.Code)
 	}
@@ -163,9 +187,13 @@ func TestGetEntryDateHandler(t *testing.T) {
 
 	url := "/api/entries/" + date.Format("2006-01-02")
 	req := httptest.NewRequest(http.MethodGet, url, nil)
-	req.Header.Set("X-User-ID", strconv.Itoa(userID))
+	token := makeTestJWT(userID, "entryuser", "entryuser@example.com", testCfg.JWTSecret)
+	req.Header.Set("Authorization", "Bearer "+token)
 	w := httptest.NewRecorder()
-	GetEntryDateHandler(w, req)
+
+	handler := middleware.AuthMiddleware(testCfg, http.HandlerFunc(GetEntryDateHandler))
+	handler.ServeHTTP(w, req)
+
 	if w.Code != http.StatusOK {
 		t.Fatalf("Expected 200 OK, got %d", w.Code)
 	}
@@ -183,9 +211,13 @@ func TestGetEntryDateHandler_NotFound(t *testing.T) {
 	date := time.Date(2025, 11, 20, 0, 0, 0, 0, time.UTC)
 	url := "/api/entries/" + date.Format("2006-01-02")
 	req := httptest.NewRequest(http.MethodGet, url, nil)
-	req.Header.Set("X-User-ID", strconv.Itoa(userID))
+	token := makeTestJWT(userID, "entryuser", "entryuser@example.com", testCfg.JWTSecret)
+	req.Header.Set("Authorization", "Bearer "+token)
 	w := httptest.NewRecorder()
-	GetEntryDateHandler(w, req)
+
+	handler := middleware.AuthMiddleware(testCfg, http.HandlerFunc(GetEntryDateHandler))
+	handler.ServeHTTP(w, req)
+
 	if w.Code != http.StatusNotFound {
 		t.Errorf("Expected 404 Not found, got %d", w.Code)
 	}
