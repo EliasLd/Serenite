@@ -1,3 +1,10 @@
+# Serenite Backend Documentation
+
+## Table of Contents
+- [Development Environment setup](#development-environment-setup)
+- [API Overview](#api-overview)
+- [Todos](#todos)
+
 ## Development Environment Setup
 
 To develop and run the backend for this project, you'll need a local PostgreSQL instance and the following setup steps:
@@ -77,3 +84,36 @@ Simply run the following command in the backend directory:
 ```bash
 go test ./... -v
 ```
+
+## API Overview
+
+The backend exposes a REST(ful) API with the following endpoints:
+
+| Method | Path                    | Description                                 | Auth Required |
+|--------|-------------------------|---------------------------------------------|:------------:|
+| GET    | `/test`                 | Test/health endpoint                        |      No      |
+| POST   | `/api/register`         | Register a new user                         |      No      |
+| POST   | `/api/login`            | Authenticate and retrieve JWT token         |      No      |
+| GET    | `/api/entries`          | List all entries for the authenticated user |     Yes      |
+| POST   | `/api/entries`          | Create a new entry                          |     Yes      |
+| GET    | `/api/entries/{date}`   | Get entry by date for authenticated user    |     Yes      |
+
+### Authentication
+
+- Protected endpoints require authentication.
+- The user ID is extracted from request context or the `X-User-ID` header in tests.
+- JWT-based authentication is used for `/api/login`.
+
+ ### Usage notes
+
+- Dates must be formatted as `YYYY-MM-DD`.
+- All endpoints return JSON responses.
+- Error handling is consistent and descriptive.
+
+---
+
+## Todos
+
+- [ ] Add user account/profile endpoints
+- [ ] Add entry update endpoint
+- [ ] Integration tests for edge cases and failures
