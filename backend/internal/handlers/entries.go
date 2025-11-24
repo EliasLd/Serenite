@@ -5,56 +5,41 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"strconv"
 	"strings"
 	"time"
 
 	"github.com/EliasLd/Serenite/internal/db"
+	"github.com/EliasLd/Serenite/internal/middleware"
 )
 
 type entryResponse struct {
-	ID        int    `db:"id"`
-	EntryDate string `db:"entry_date"`
-	Thing1    string `db:"thing_1"`
-	Why1      string `db:"why_1"`
-	Thing2    string `db:"thing_2"`
-	Why2      string `db:"why_2"`
-	Thing3    string `db:"thing_3"`
-	Why3      string `db:"why_3"`
-	CreatedAt string `db:"created_at"`
-	UpdatedAt string `db:"updated_at"`
+	ID        int    `json:"id"`
+	EntryDate string `json:"entry_date"`
+	Thing1    string `json:"thing_1"`
+	Why1      string `json:"why_1"`
+	Thing2    string `json:"thing_2"`
+	Why2      string `json:"why_2"`
+	Thing3    string `json:"thing_3"`
+	Why3      string `json:"why_3"`
+	CreatedAt string `json:"created_at"`
+	UpdatedAt string `json:"updated_at"`
 }
 
 type createEntryRequest struct {
-	EntryDate string `db:"entry_date"`
-	Thing1    string `db:"thing_1"`
-	Why1      string `db:"why_1"`
-	Thing2    string `db:"thing_2"`
-	Why2      string `db:"why_2"`
-	Thing3    string `db:"thing_3"`
-	Why3      string `db:"why_3"`
+	EntryDate string `json:"entry_date"`
+	Thing1    string `json:"thing_1"`
+	Why1      string `json:"why_1"`
+	Thing2    string `json:"thing_2"`
+	Why2      string `json:"why_2"`
+	Thing3    string `json:"thing_3"`
+	Why3      string `json:"why_3"`
 }
 
 // Tries to obtain the authenticated user id.
-func getUserIDFromRequest(r *http.Request) (int, error) {
-	// Try context value
-	if v := r.Context().Value("userID"); v != nil {
-		switch id := v.(type) {
-		case int:
-			if id > 0 {
-				return id, nil
-			}
-		case string:
-			if parsed, err := strconv.Atoi(id); err == nil {
-				return parsed, nil
-			}
-		}
-	}
-
-	// Fallback to header
-	if h := r.Header.Get("X-User-ID"); h != "" {
-		if parsed, err := strconv.Atoi(h); err == nil && parsed > 0 {
-			return parsed, nil
+func getUserIDFromContext(r *http.Request) (int, error) {
+	if v := r.Context().Value(middleware.UserIDKey); v != nil {
+		if id, ok := v.(int); ok && id > 0 {
+			return id, nil
 		}
 	}
 
@@ -80,7 +65,7 @@ func mapEntryToResponse(e *db.Entry) entryResponse {
 // Handles GET /api/entries
 // Responds with JSON array of entries for the authenticated user,
 func ListEntriesHandler(w http.ResponseWriter, r *http.Request) {
-	userID, err := getUserIDFromRequest(r)
+	userID, err := getUserIDFromContext(r)
 	if err != nil {
 		http.Error(w, "unauthorized", http.StatusUnauthorized)
 		return
@@ -107,7 +92,7 @@ func ListEntriesHandler(w http.ResponseWriter, r *http.Request) {
 // Handles POST /api/entries
 // Accepts JSON body with the three things + reasons,
 func CreateEntryHandler(w http.ResponseWriter, r *http.Request) {
-	userID, err := getUserIDFromRequest(r)
+	userID, err := getUserIDFromContext(r)
 	if err != nil {
 		http.Error(w, "unauthorized", http.StatusUnauthorized)
 		return
@@ -172,7 +157,7 @@ func CreateEntryHandler(w http.ResponseWriter, r *http.Request) {
 
 // Handles GET /api/entries/{date}
 func GetEntryDateHandler(w http.ResponseWriter, r *http.Request) {
-	userID, err := getUserIDFromRequest(r)
+	userID, err := getUserIDFromContext(r)
 	if err != nil {
 		http.Error(w, "unauthorized", http.StatusUnauthorized)
 		return

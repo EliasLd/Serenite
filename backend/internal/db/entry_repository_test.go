@@ -13,7 +13,7 @@ var testCfg *config.Config
 
 // TestMain helps setup and teardown for all tests in this package.
 func TestMain(m *testing.M) {
-	testCfg = config.LoadConfig()
+	testCfg = config.LoadConfig(testutil.Env_file_path)
 	code := m.Run()
 	testutil.TeardownTestDB()
 	os.Exit(code)

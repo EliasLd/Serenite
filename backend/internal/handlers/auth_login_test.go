@@ -34,7 +34,7 @@ func setupTestUser(t *testing.T) {
 
 func TestHandleLoginUser_Success(t *testing.T) {
 	setupTestUser(t)
-	cfg := config.LoadConfig()
+	cfg := config.LoadConfig(testutil.Env_file_path)
 
 	loginReq := LoginRequest{
 		Email:    "loginuser@example.com",
@@ -69,7 +69,7 @@ func TestHandleLoginUser_Success(t *testing.T) {
 
 func TestHandleLoginUser_InvalidPassword(t *testing.T) {
 	setupTestUser(t)
-	cfg := config.LoadConfig()
+	cfg := config.LoadConfig(testutil.Env_file_path)
 
 	loginReq := LoginRequest{
 		Email:    "loginuser@example.com",
@@ -89,7 +89,7 @@ func TestHandleLoginUser_InvalidPassword(t *testing.T) {
 
 func TestHandleLoginUser_InvalidEmail(t *testing.T) {
 	setupTestUser(t)
-	cfg := config.LoadConfig()
+	cfg := config.LoadConfig(testutil.Env_file_path)
 
 	loginReq := LoginRequest{
 		Email:    "wrongemail@example.com",
@@ -109,7 +109,7 @@ func TestHandleLoginUser_InvalidEmail(t *testing.T) {
 
 func TestHandleLoginUser_MissingFields(t *testing.T) {
 	setupTestUser(t)
-	cfg := config.LoadConfig()
+	cfg := config.LoadConfig(testutil.Env_file_path)
 
 	testCases := []struct {
 		name string
@@ -138,7 +138,7 @@ func TestHandleLoginUser_MissingFields(t *testing.T) {
 
 func TestHandleLoginUser_InvalidJSON(t *testing.T) {
 	setupTestUser(t)
-	cfg := config.LoadConfig()
+	cfg := config.LoadConfig(testutil.Env_file_path)
 
 	req := httptest.NewRequest(http.MethodPost, "/api/login", bytes.NewReader([]byte("invalid json")))
 	req.Header.Set("Content-Type", "application/json")

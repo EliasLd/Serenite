@@ -8,9 +8,11 @@ import (
 	"net/http"
 )
 
+const env_file_path string = ".env"
+
 func main() {
 	// Load environment variables configuration
-	cfg := config.LoadConfig()
+	cfg := config.LoadConfig(env_file_path)
 	if err := cfg.Validate(); err != nil {
 		log.Fatal("Configuration validation failed:", err)
 	}
