@@ -27,7 +27,7 @@ export default function Authentication() {
         }}
       >
         <div className="fixed top-0 left-0 w-full z-10">
-          <Navbar isLoggedIn={false} />
+          <Navbar />
         </div>
         <div className="w-full max-w-md">
           {mode === "login" ? (

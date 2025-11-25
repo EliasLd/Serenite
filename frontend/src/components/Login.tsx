@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
 import ContextButton from "./ContextButton";
 
 export default function Login() {
@@ -8,6 +9,7 @@ export default function Login() {
   });
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const { login } = useAuth();
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -27,6 +29,8 @@ export default function Login() {
       if (!res.ok) {
         setError(await res.text());
       } else {
+        const data = await res.json();
+        login(data.token);
         setSuccess("Logged in!");
       }
     } catch (err) {
