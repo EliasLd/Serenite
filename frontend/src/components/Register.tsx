@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import ContextButton from "./ContextButton";
 
 export default function Register() {
@@ -10,6 +11,7 @@ export default function Register() {
   });
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -39,6 +41,8 @@ export default function Register() {
         setError(await res.text());
       } else {
         setSuccess("Account created!");
+        navigate("/auth?mode=login");
+
       }
     } catch (err) {
       setError("Network error");
