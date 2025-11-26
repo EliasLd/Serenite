@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import Login from "../components/Login";
 import Register from "../components/Register";
 import Navbar from "../components/Navbar";
@@ -10,10 +11,18 @@ export default function Authentication() {
   const [searchParams] = useSearchParams();
   const initialMode = searchParams.get("mode") === "register" ? "register" : "login";
   const [mode, setMode] = useState<"login" | "register">(initialMode);
+  const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
 
   useEffect(() => {
     setMode(searchParams.get("mode") === "register" ? "register" : "login");
   }, [searchParams]);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/dashboard");
+    }
+  })
 
   return (
     <>
