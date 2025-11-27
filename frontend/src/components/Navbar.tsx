@@ -2,12 +2,11 @@ import { Link } from "react-router-dom";
 import Logo from "./Logo";
 import ContextButton from "./ContextButton";
 import BurgerMenu from "./BurgerMenu";
+import { useAuth } from "../contexts/AuthContext";
 
-type NavbarProps = {
-  isLoggedIn: boolean;
-};
+export default function Navbar() {
+  const { isLoggedIn, logout } = useAuth();
 
-export default function Navbar({ isLoggedIn }: NavbarProps) {
   return (
     <nav className="bg-sereniteText py-3 sticky top-0 z-50">
       <div className="max-w-4xl mx-auto flex items-center justify-between px-6">
@@ -47,7 +46,16 @@ export default function Navbar({ isLoggedIn }: NavbarProps) {
                 </ContextButton>
               </Link>
             </>
-          ) : null}
+          ) : (
+            <>
+              <ContextButton
+                onClick={logout}
+                className="px-4 py-1 text-sm bg-sereniteDetail text-white"
+              >
+                Logout
+              </ContextButton>
+            </>
+          )}
         </div>
         <BurgerMenu isLoggedIn={isLoggedIn} />
       </div>

@@ -1,13 +1,19 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import ContextButton from "./ContextButton";
+
 
 export default function Login() {
   const [form, setForm] = useState({
-    email: "",
+    email: localStorage.getItem("savedEmail") || "",
     password: "",
   });
+
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -27,7 +33,11 @@ export default function Login() {
       if (!res.ok) {
         setError(await res.text());
       } else {
+        const data = await res.json();
+        login(data.token);
         setSuccess("Logged in!");
+        localStorage.setItem("savedEmail", form.email);
+        navigate("/dashboard");
       }
     } catch (err) {
       setError("Network error");

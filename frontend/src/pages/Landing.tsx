@@ -8,7 +8,7 @@ import { FaChevronDown } from "react-icons/fa";
 export default function Landing() {
   return (
     <>
-      <Navbar isLoggedIn={false} />
+      <Navbar />
       <section id="home">
         <div className="min-h-screen bg-sereniteBg flex flex-col">
           <main className="flex-1 flex flex-col justify-center items-center w-full">
