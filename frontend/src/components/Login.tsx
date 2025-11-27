@@ -6,9 +6,10 @@ import ContextButton from "./ContextButton";
 
 export default function Login() {
   const [form, setForm] = useState({
-    email: "",
+    email: localStorage.getItem("savedEmail") || "",
     password: "",
   });
+
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const { login } = useAuth();
@@ -35,6 +36,7 @@ export default function Login() {
         const data = await res.json();
         login(data.token);
         setSuccess("Logged in!");
+        localStorage.setItem("savedEmail", form.email);
         navigate("/dashboard");
       }
     } catch (err) {
