@@ -11,22 +11,22 @@ export default function DashHeroSection() {
 
   return (
     <section className="w-full flex flex-col gap-y-5 items-center mb-12 px-6">
-      <div className="text-2xl sm:text-3xl md:text-5xl font-bold text-sereniteText text-left mb-2">
+      <div className="text-3xl sm:text-3xl md:text-5xl font-bold text-sereniteText text-left mb-2 w-full max-w-2xl">
         Welcome, {username}!
       </div>
       <div
-        className="border-l-4 border-sereniteAccent pl-4 ml-2 italic text-lg text-sereniteTextLight"
+        className="w-full max-w-xl px-4 sm:px-8 border-l-4 border-sereniteAccent italic text-lg text-sereniteTextLight"
         style={{ marginTop: "10px" }}
       >
         {loading && "Fetching a little positivity..."}
         {!loading && error && (
+          <span>{error}</span>
+        )}
+        {!loading && !error && (
           <span>
-            {error}
+            &quot;{quote}&quot;
           </span>
         )}
-        "
-        {!loading && !error && quote}
-        "
       </div>
     </section>
   );
