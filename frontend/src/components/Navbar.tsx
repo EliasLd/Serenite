@@ -24,9 +24,7 @@ export default function Navbar() {
         {!isLoggedIn ? (
           <>
             <Link to="/auth?mode=login">Login</Link>
-            <div className="rounded-full shadow-sm shadow-sereniteText/50 hover:shadow-none border border-sereniteText hover:bg-sereniteText py-1 px-3 text-black hover:text-white ease-in-out duration-200">
-              <Link to="/auth?mode=register">Register</Link>
-            </div>
+            <Link to="/auth?mode=register" className="rounded-full shadow-sm shadow-sereniteText/50 hover:shadow-none border border-sereniteText hover:bg-sereniteText py-1 px-3 text-black hover:text-white ease-in-out duration-200">Register</Link>
           </>
         ) : (
           <div className="flex items-center gap-x-5">
