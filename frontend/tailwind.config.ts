@@ -7,16 +7,17 @@ export default {
   theme: {
     extend: {
       colors: {
-        sereniteBg: "#C3BEF7",
-        sereniteAccent: "#EDD382",
+        sereniteBg: "#F9F0EB",
+        sereniteAccent: "#F0BC74",
         sereniteCard: "#EDE6F2",
-        sereniteText: "#074F57",
+        sereniteText: "#373E46",
         sereniteFeature: "#BFDBF7",
         sereniteDetail: "#6D597A",
         sereniteTextLight: "#FFF",
       },
       fontFamily: {
-        dmmono: ['DM Mono', 'monospace'],
+        mulish: ['Mulish'],
+        roboto: ['Roboto'],
       },
     },
   },
