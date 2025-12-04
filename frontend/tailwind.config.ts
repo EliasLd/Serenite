@@ -9,7 +9,7 @@ export default {
       colors: {
         sereniteBg: "#F9F0EB",
         sereniteAccent: "#F0BC74",
-        sereniteCard: "#EDE6F2",
+        sereniteCard: "#786F45",
         sereniteText: "#373E46",
         sereniteFeature: "#BFDBF7",
         sereniteDetail: "#6D597A",

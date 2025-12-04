@@ -32,7 +32,7 @@ export default function Navbar() {
             <Link to="/auth?mode=register" className="rounded-full shadow-sm shadow-sereniteText/50 hover:shadow-none border border-sereniteText hover:bg-sereniteText py-1 px-3 text-black hover:text-white ease-in-out duration-200">Register</Link>
           </>
         ) : (
-          <div className="flex items-center gap-x-5">
+          <div className="flex items-center gap-x-2">
             <a className="group">
               <Link to="/entries">Diary</Link>
               <div className="bg-teal-500 h-[2px] w-0 group-hover:w-full transition-all duration-300" />
