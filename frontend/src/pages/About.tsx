@@ -42,7 +42,7 @@ export default function About() {
 
             <div className="mt-4 flex flex-col items-center gap-y-3">
               <h2 className="text-lg sm:text-xl lg:text-2xl font-mulish font-bold text-sereniteText italic">
-                Start today. Start small. Start noticing the good.
+                Start <span className="underline decoration-sereniteAccent">today</span>. Start <span className="text-sereniteAccent">small .</span> Start noticing the <span className="bg-sereniteAccent rounded px-2 py-1 text-white">good.</span>
               </h2>
             </div>
           </div>

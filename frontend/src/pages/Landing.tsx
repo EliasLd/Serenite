@@ -8,7 +8,7 @@ export default function Landing() {
     <>
       <Navbar />
       <section className="h-screen bg-sereniteBg flex items-center overflow-hidden">
-        <div className="w-full flex flex-col lg:flex-row lg:mx-16 xl:mx-28">
+        <div className="pt-20 w-full flex flex-col lg:flex-row lg:mx-16 xl:mx-28">
           <div className="pt-20 lg:pt-0 px-8 sm:px-12 md:px-14 lg:px-16 xl:px-24 flex items-center justify-center">
             <div className="flex flex-col gap-y-5 lg:gap-y-8 xl:gap-y-10">
               <h1 className="text-4xl sm:text-5xl lg:text-5xl xl:text-6xl font-mulish font-bold text-sereniteText">
@@ -34,7 +34,7 @@ export default function Landing() {
             </div>
           </div>
           <div className="flex items-center justify-center mt-10 lg:mt-0 px-8 lg:px-0">
-            <img src={illustration} className="w-full max-w-md lg:max-w-none lg:w-full object-contain" alt="Mindfulness illustration" />
+            <img src={illustration} className="w-full max-w-md lg:max-w-none lg:w-full  object-contain" alt="Mindfulness illustration" />
           </div>
         </div>
       </section>
