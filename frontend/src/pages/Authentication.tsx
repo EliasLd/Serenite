@@ -5,8 +5,6 @@ import Login from "../components/Login";
 import Register from "../components/Register";
 import Navbar from "../components/Navbar";
 
-import backgroundImg from "../assets/auth-bg.jpg";
-
 export default function Authentication() {
   const [searchParams] = useSearchParams();
   const initialMode = searchParams.get("mode") === "register" ? "register" : "login";
@@ -27,14 +25,7 @@ export default function Authentication() {
   return (
     <>
       <div
-        className="min-h-screen flex flex-col items-center justify-center px-4 bg-cover bg-center"
-        style={{
-          backgroundImage: `url(${backgroundImg})`,
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
+        className="min-h-screen flex flex-col items-center justify-center px-4 bg-sereniteBg">
         <div className="fixed top-0 left-0 w-full z-10">
           <Navbar />
         </div>
@@ -42,9 +33,9 @@ export default function Authentication() {
           {mode === "login" ? (
             <>
               <Login />
-              <div className="mt-4 text-sm text-center text-sereniteTextLight">
+              <div className="mt-4 text-sm text-center text-sereniteText">
                 Don't have an account?
-                <Link to="/auth?mode=register" className="text-sereniteText ml-1 hover:underline">
+                <Link to="/auth?mode=register" className="text-sereniteCard ml-1 hover:underline">
                   Register
                 </Link>
               </div>
@@ -52,9 +43,9 @@ export default function Authentication() {
           ) : (
             <>
               <Register />
-              <div className="mt-4 text-sm text-center text-sereniteTextLight">
+              <div className="mt-4 text-sm text-center text-sereniteText">
                 Already have an account?
-                <Link to="/auth?mode=login" className="text-sereniteText ml-1 hover:underline">
+                <Link to="/auth?mode=login" className="text-sereniteCard ml-1 hover:underline">
                   Sign in
                 </Link>
               </div>

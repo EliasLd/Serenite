@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import ContextButton from "./ContextButton";
-
 
 export default function Login() {
   const [form, setForm] = useState({
@@ -45,12 +43,9 @@ export default function Login() {
   }
 
   return (
-    <div className="p-4 rounded-lg max-w-sm mx-auto
-    bg-sereniteDetail/40 
-    backdrop-blur-md
-    shadow-lg">
+    <div className="p-4 rounded-lg max-w-sm mx-auto bg-sereniteBg/50 border border-sereniteText backdrop-blur-md">
       <form onSubmit={handleSubmit} className="space-y-6 my-3 px-5 text-sereniteText">
-        <div className="mb-2 text-xl font-bold text-center text-sereniteTextLight">
+        <div className="mb-2 text-xl font-bold text-center">
           Welcome back!
         </div>
         <div className="w-full h-px bg-sereniteCard mb-5" />
@@ -72,9 +67,9 @@ export default function Login() {
         {error && <div className="text-red-600">{error}</div>}
         {success && <div className="text-green-700">{success}</div>}
         <div className="flex justify-center mt-8 w-full">
-          <ContextButton type="submit" className="w-full">
+          <button type="submit" className="w-full bg-sereniteAccent py-2 rounded-lg font-mulish font-bold text-white text-lg">
             Login
-          </ContextButton>
+          </button>
         </div>
       </form>
     </div>
