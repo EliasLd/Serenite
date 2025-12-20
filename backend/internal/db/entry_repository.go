@@ -28,7 +28,7 @@ type EntryRepository interface {
 	CreateEntry(entry *Entry) error
 }
 
-func ListEntries(userID int) ([]*Entry, error) {
+func ListEntries(userID int, encryptionKey string) ([]*Entry, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
@@ -54,19 +54,38 @@ func ListEntries(userID int) ([]*Entry, error) {
 			&entry.Thing3, &entry.Why3,
 			&entry.CreatedAt, &entry.UpdatedAt,
 		)
+
 		if err != nil {
 			return nil, err
 		}
+		if entry.Thing1, err = crypto.Decrypt(entry.Thing1, encryptionKey); err != nil {
+			return nil, err
+		}
+		if entry.Why1, err = crypto.Decrypt(entry.Why1, encryptionKey); err != nil {
+			return nil, err
+		}
+		if entry.Thing2, err = crypto.Decrypt(entry.Thing2, encryptionKey); err != nil {
+			return nil, err
+		}
+		if entry.Why2, err = crypto.Decrypt(entry.Why2, encryptionKey); err != nil {
+			return nil, err
+		}
+		if entry.Thing3, err = crypto.Decrypt(entry.Thing3, encryptionKey); err != nil {
+			return nil, err
+		}
+		if entry.Why3, err = crypto.Decrypt(entry.Why3, encryptionKey); err != nil {
+			return nil, err
+		}
+
 		entries = append(entries, &entry)
 	}
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
 	return entries, nil
-
 }
 
-func GetEntryByDate(userID int, entryDate time.Time) (*Entry, error) {
+func GetEntryByDate(userID int, entryDate time.Time, encryptionKey string) (*Entry, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
@@ -89,6 +108,27 @@ func GetEntryByDate(userID int, entryDate time.Time) (*Entry, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	// Decipher entries
+	if entry.Thing1, err = crypto.Decrypt(entry.Thing1, encryptionKey); err != nil {
+		return nil, err
+	}
+	if entry.Why1, err = crypto.Decrypt(entry.Why1, encryptionKey); err != nil {
+		return nil, err
+	}
+	if entry.Thing2, err = crypto.Decrypt(entry.Thing2, encryptionKey); err != nil {
+		return nil, err
+	}
+	if entry.Why2, err = crypto.Decrypt(entry.Why2, encryptionKey); err != nil {
+		return nil, err
+	}
+	if entry.Thing3, err = crypto.Decrypt(entry.Thing3, encryptionKey); err != nil {
+		return nil, err
+	}
+	if entry.Why3, err = crypto.Decrypt(entry.Why3, encryptionKey); err != nil {
+		return nil, err
+	}
+
 	return &entry, nil
 }
 

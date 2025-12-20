@@ -75,14 +75,14 @@ func mapEntryToResponse(e *db.Entry) entryResponse {
 
 // Handles GET /api/entries
 // Responds with JSON array of entries for the authenticated user,
-func ListEntriesHandler(w http.ResponseWriter, r *http.Request) {
+func (h *EntriesHandler) ListEntriesHandler(w http.ResponseWriter, r *http.Request) {
 	userID, err := getUserIDFromContext(r)
 	if err != nil {
 		http.Error(w, "unauthorized", http.StatusUnauthorized)
 		return
 	}
 
-	entries, err := db.ListEntries(userID)
+	entries, err := db.ListEntries(userID, h.EncryptionKey)
 	if err != nil {
 		http.Error(w, "internal error fetching entries", http.StatusInternalServerError)
 		return
@@ -167,7 +167,7 @@ func (h *EntriesHandler) CreateEntryHandler(w http.ResponseWriter, r *http.Reque
 }
 
 // Handles GET /api/entries/{date}
-func GetEntryDateHandler(w http.ResponseWriter, r *http.Request) {
+func (h *EntriesHandler) GetEntryDateHandler(w http.ResponseWriter, r *http.Request) {
 	userID, err := getUserIDFromContext(r)
 	if err != nil {
 		http.Error(w, "unauthorized", http.StatusUnauthorized)
@@ -190,7 +190,7 @@ func GetEntryDateHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	entryDate := time.Date(d.Year(), d.Month(), d.Day(), 0, 0, 0, 0, time.UTC)
 
-	entry, err := db.GetEntryByDate(userID, entryDate)
+	entry, err := db.GetEntryByDate(userID, entryDate, h.EncryptionKey)
 	if err != nil {
 		http.Error(w, "internal server error", http.StatusInternalServerError)
 		return

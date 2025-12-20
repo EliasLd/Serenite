@@ -18,9 +18,9 @@ func SetupRouter(cfg *config.Config) http.Handler {
 
 	// Entries
 	entriesHandler := handlers.NewEntriesHandler(cfg)
-	mux.Handle("GET /api/entries", middleware.AuthMiddleware(cfg, http.HandlerFunc(handlers.ListEntriesHandler)))
+	mux.Handle("GET /api/entries", middleware.AuthMiddleware(cfg, http.HandlerFunc(entriesHandler.ListEntriesHandler)))
 	mux.Handle("POST /api/entries", middleware.AuthMiddleware(cfg, http.HandlerFunc(entriesHandler.CreateEntryHandler)))
-	mux.Handle("GET /api/entries/", middleware.AuthMiddleware(cfg, http.HandlerFunc(handlers.GetEntryDateHandler)))
+	mux.Handle("GET /api/entries/", middleware.AuthMiddleware(cfg, http.HandlerFunc(entriesHandler.GetEntryDateHandler)))
 
 	mux.Handle("GET /api/positive-quote", middleware.AuthMiddleware(cfg, http.HandlerFunc(handlers.HandlePositiveQuote)))
 
