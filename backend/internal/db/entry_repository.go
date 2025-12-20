@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"time"
+
+	"github.com/EliasLd/Serenite/internal/crypto"
 )
 
 type Entry struct {
@@ -90,9 +92,35 @@ func GetEntryByDate(userID int, entryDate time.Time) (*Entry, error) {
 	return &entry, nil
 }
 
-func CreateEntry(entry *Entry) error {
+func CreateEntry(entry *Entry, encryptionKey string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
+
+	// cipher each entry
+	thing1Enc, err := crypto.Encrypt(entry.Thing1, encryptionKey)
+	if err != nil {
+		return err
+	}
+	why1Enc, err := crypto.Encrypt(entry.Why1, encryptionKey)
+	if err != nil {
+		return err
+	}
+	thing2Enc, err := crypto.Encrypt(entry.Thing2, encryptionKey)
+	if err != nil {
+		return err
+	}
+	why2Enc, err := crypto.Encrypt(entry.Why2, encryptionKey)
+	if err != nil {
+		return err
+	}
+	thing3Enc, err := crypto.Encrypt(entry.Thing3, encryptionKey)
+	if err != nil {
+		return err
+	}
+	why3Enc, err := crypto.Encrypt(entry.Why3, encryptionKey)
+	if err != nil {
+		return err
+	}
 
 	query := `
 		INSERT INTO entries (user_id, entry_date, thing_1, why_1, thing_2, why_2, thing_3, why_3, created_at, updated_at)
@@ -102,8 +130,8 @@ func CreateEntry(entry *Entry) error {
 
 	return DB.QueryRowContext(ctx, query,
 		entry.UserID, entry.EntryDate,
-		entry.Thing1, entry.Why1,
-		entry.Thing2, entry.Why2,
-		entry.Thing3, entry.Why3,
+		thing1Enc, why1Enc,
+		thing2Enc, why2Enc,
+		thing3Enc, why3Enc,
 	).Scan(&entry.ID, &entry.CreatedAt, &entry.UpdatedAt)
 }

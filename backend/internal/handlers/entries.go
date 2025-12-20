@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/EliasLd/Serenite/config"
 	"github.com/EliasLd/Serenite/internal/db"
 	"github.com/EliasLd/Serenite/internal/middleware"
 )
@@ -33,6 +34,16 @@ type createEntryRequest struct {
 	Why2      string `json:"why_2"`
 	Thing3    string `json:"thing_3"`
 	Why3      string `json:"why_3"`
+}
+
+type EntriesHandler struct {
+	EncryptionKey string
+}
+
+func NewEntriesHandler(cfg *config.Config) *EntriesHandler {
+	return &EntriesHandler{
+		EncryptionKey: cfg.EncryptionKey,
+	}
 }
 
 // Tries to obtain the authenticated user id.
@@ -91,7 +102,7 @@ func ListEntriesHandler(w http.ResponseWriter, r *http.Request) {
 
 // Handles POST /api/entries
 // Accepts JSON body with the three things + reasons,
-func CreateEntryHandler(w http.ResponseWriter, r *http.Request) {
+func (h *EntriesHandler) CreateEntryHandler(w http.ResponseWriter, r *http.Request) {
 	userID, err := getUserIDFromContext(r)
 	if err != nil {
 		http.Error(w, "unauthorized", http.StatusUnauthorized)
@@ -137,7 +148,7 @@ func CreateEntryHandler(w http.ResponseWriter, r *http.Request) {
 		Why3:      strings.TrimSpace(req.Why3),
 	}
 
-	if err := db.CreateEntry(newEntry); err != nil {
+	if err := db.CreateEntry(newEntry, h.EncryptionKey); err != nil {
 		// Detect unique constraint violation in a simple driver-agnostic way
 		if strings.Contains(strings.ToLower(err.Error()), "unique") || strings.Contains(strings.ToLower(err.Error()), "duplicate") {
 			http.Error(w, "entry already exists for this date", http.StatusConflict)

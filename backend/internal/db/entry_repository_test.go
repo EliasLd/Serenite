@@ -52,7 +52,7 @@ func TestCreateAndGetEntryByDate(t *testing.T) {
 		Why3:      "Scheduled chat",
 	}
 
-	err := CreateEntry(entry)
+	err := CreateEntry(entry, testCfg.EncryptionKey)
 	if err != nil {
 		t.Fatalf("CreateEntry failed: %v", err)
 	}
@@ -97,10 +97,10 @@ func TestListEntries(t *testing.T) {
 		Why3:      "Health",
 	}
 
-	if err := CreateEntry(entry1); err != nil {
+	if err := CreateEntry(entry1, testCfg.EncryptionKey); err != nil {
 		t.Fatalf("CreateEntry entry1 failed: %v", err)
 	}
-	if err := CreateEntry(entry2); err != nil {
+	if err := CreateEntry(entry2, testCfg.EncryptionKey); err != nil {
 		t.Fatalf("CreateEntry entry2 failed: %v", err)
 	}
 
