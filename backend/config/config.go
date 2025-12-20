@@ -14,6 +14,7 @@ type Config struct {
 	JWTSecret          string
 	JWTExpirationHours int
 	Port               string
+	EncryptionKey      string
 }
 
 // Loads environment variables from .env file and return a Config struct
@@ -47,6 +48,7 @@ func LoadConfig(env_file_path string) *Config {
 		JWTSecret:          os.Getenv("JWT_SECRET"),
 		JWTExpirationHours: jwtExpHours,
 		Port:               port,
+		EncryptionKey:      os.Getenv("ENCRYPTION_KEY"),
 	}
 }
 
@@ -59,6 +61,9 @@ func (c *Config) Validate() error {
 	}
 	if c.JWTSecret == "" {
 		log.Fatalf("JWT_SECRET environment variable is required")
+	}
+	if c.EncryptionKey == "" {
+		log.Fatalf("ENCRYPTION_KEY environment variable is required")
 	}
 	return nil
 }
