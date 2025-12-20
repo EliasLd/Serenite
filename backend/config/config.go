@@ -1,6 +1,7 @@
 package config
 
 import (
+	"encoding/hex"
 	"log"
 	"os"
 	"strconv"
@@ -42,13 +43,22 @@ func LoadConfig(env_file_path string) *Config {
 		}
 	}
 
+	keyHex := os.Getenv("ENCRYPTION_KEY")
+	keyBytes, err := hex.DecodeString(keyHex)
+	if err != nil {
+		log.Fatalf("Invalid encryption key: %v", err)
+	}
+	if len(keyBytes) != 32 {
+		log.Fatalf("Encryption key must decode to 32 bytes (got %d)", len(keyBytes))
+	}
+
 	return &Config{
 		DBConnString:       os.Getenv("DB_CONN_STRING"),
 		TestDBConnString:   os.Getenv("TEST_DB_CONN_STRING"),
 		JWTSecret:          os.Getenv("JWT_SECRET"),
 		JWTExpirationHours: jwtExpHours,
 		Port:               port,
-		EncryptionKey:      os.Getenv("ENCRYPTION_KEY"),
+		EncryptionKey:      string(keyBytes),
 	}
 }
 
