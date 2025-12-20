@@ -1,6 +1,7 @@
 package config
 
 import (
+	"encoding/hex"
 	"log"
 	"os"
 	"strconv"
@@ -14,6 +15,7 @@ type Config struct {
 	JWTSecret          string
 	JWTExpirationHours int
 	Port               string
+	EncryptionKey      string
 }
 
 // Loads environment variables from .env file and return a Config struct
@@ -41,12 +43,22 @@ func LoadConfig(env_file_path string) *Config {
 		}
 	}
 
+	keyHex := os.Getenv("ENCRYPTION_KEY")
+	keyBytes, err := hex.DecodeString(keyHex)
+	if err != nil {
+		log.Fatalf("Invalid encryption key: %v", err)
+	}
+	if len(keyBytes) != 32 {
+		log.Fatalf("Encryption key must decode to 32 bytes (got %d)", len(keyBytes))
+	}
+
 	return &Config{
 		DBConnString:       os.Getenv("DB_CONN_STRING"),
 		TestDBConnString:   os.Getenv("TEST_DB_CONN_STRING"),
 		JWTSecret:          os.Getenv("JWT_SECRET"),
 		JWTExpirationHours: jwtExpHours,
 		Port:               port,
+		EncryptionKey:      string(keyBytes),
 	}
 }
 
@@ -59,6 +71,9 @@ func (c *Config) Validate() error {
 	}
 	if c.JWTSecret == "" {
 		log.Fatalf("JWT_SECRET environment variable is required")
+	}
+	if c.EncryptionKey == "" {
+		log.Fatalf("ENCRYPTION_KEY environment variable is required")
 	}
 	return nil
 }

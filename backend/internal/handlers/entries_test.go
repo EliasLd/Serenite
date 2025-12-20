@@ -58,7 +58,9 @@ func TestCreateEntryHandler_success(t *testing.T) {
 	req.Header.Set("Content-Type", "application/json")
 	w := httptest.NewRecorder()
 
-	handler := middleware.AuthMiddleware(testCfg, http.HandlerFunc(CreateEntryHandler))
+	entriesHandler := NewEntriesHandler(testCfg)
+
+	handler := middleware.AuthMiddleware(testCfg, http.HandlerFunc(entriesHandler.CreateEntryHandler))
 	handler.ServeHTTP(w, req)
 
 	if w.Code != http.StatusCreated {
@@ -95,7 +97,9 @@ func TestCreateEntryHandler_DuplicateDate(t *testing.T) {
 		req.Header.Set("Content-Type", "application/json")
 		w := httptest.NewRecorder()
 
-		handler := middleware.AuthMiddleware(testCfg, http.HandlerFunc(CreateEntryHandler))
+		entriesHandler := NewEntriesHandler(testCfg)
+
+		handler := middleware.AuthMiddleware(testCfg, http.HandlerFunc(entriesHandler.CreateEntryHandler))
 		handler.ServeHTTP(w, req)
 
 		if i == 0 && w.Code != http.StatusCreated {
@@ -134,10 +138,10 @@ func TestListEntriesHandler(t *testing.T) {
 		Why3:      "Learning",
 	}
 
-	if err := db.CreateEntry(entry1); err != nil {
+	if err := db.CreateEntry(entry1, testCfg.EncryptionKey); err != nil {
 		t.Fatalf("CreateEntry entry1 failed: %v", err)
 	}
-	if err := db.CreateEntry(entry2); err != nil {
+	if err := db.CreateEntry(entry2, testCfg.EncryptionKey); err != nil {
 		t.Fatalf("CreateEntry entry2 failed: %v", err)
 	}
 
@@ -146,7 +150,9 @@ func TestListEntriesHandler(t *testing.T) {
 	req.Header.Set("Authorization", "Bearer "+token)
 	w := httptest.NewRecorder()
 
-	handler := middleware.AuthMiddleware(testCfg, http.HandlerFunc(ListEntriesHandler))
+	entriesHandler := NewEntriesHandler(testCfg)
+
+	handler := middleware.AuthMiddleware(testCfg, http.HandlerFunc(entriesHandler.ListEntriesHandler))
 	handler.ServeHTTP(w, req)
 
 	if w.Code != http.StatusOK {
@@ -181,7 +187,7 @@ func TestGetEntryDateHandler(t *testing.T) {
 		Why3:      "Why 3",
 	}
 
-	if err := db.CreateEntry(entry); err != nil {
+	if err := db.CreateEntry(entry, testCfg.EncryptionKey); err != nil {
 		t.Fatalf("CreateEntry failed: %v", err)
 	}
 
@@ -191,7 +197,9 @@ func TestGetEntryDateHandler(t *testing.T) {
 	req.Header.Set("Authorization", "Bearer "+token)
 	w := httptest.NewRecorder()
 
-	handler := middleware.AuthMiddleware(testCfg, http.HandlerFunc(GetEntryDateHandler))
+	entriesHandler := NewEntriesHandler(testCfg)
+
+	handler := middleware.AuthMiddleware(testCfg, http.HandlerFunc(entriesHandler.GetEntryDateHandler))
 	handler.ServeHTTP(w, req)
 
 	if w.Code != http.StatusOK {
@@ -215,7 +223,9 @@ func TestGetEntryDateHandler_NotFound(t *testing.T) {
 	req.Header.Set("Authorization", "Bearer "+token)
 	w := httptest.NewRecorder()
 
-	handler := middleware.AuthMiddleware(testCfg, http.HandlerFunc(GetEntryDateHandler))
+	entriesHandler := NewEntriesHandler(testCfg)
+
+	handler := middleware.AuthMiddleware(testCfg, http.HandlerFunc(entriesHandler.GetEntryDateHandler))
 	handler.ServeHTTP(w, req)
 
 	if w.Code != http.StatusNotFound {

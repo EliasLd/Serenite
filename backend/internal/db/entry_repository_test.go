@@ -52,13 +52,13 @@ func TestCreateAndGetEntryByDate(t *testing.T) {
 		Why3:      "Scheduled chat",
 	}
 
-	err := CreateEntry(entry)
+	err := CreateEntry(entry, testCfg.EncryptionKey)
 	if err != nil {
 		t.Fatalf("CreateEntry failed: %v", err)
 	}
 
 	// Fetch by date
-	got, err := GetEntryByDate(userID, entryDate)
+	got, err := GetEntryByDate(userID, entryDate, testCfg.EncryptionKey)
 	if err != nil {
 		t.Fatalf("GetEntryByDate failed: %v", err)
 	}
@@ -97,14 +97,14 @@ func TestListEntries(t *testing.T) {
 		Why3:      "Health",
 	}
 
-	if err := CreateEntry(entry1); err != nil {
+	if err := CreateEntry(entry1, testCfg.EncryptionKey); err != nil {
 		t.Fatalf("CreateEntry entry1 failed: %v", err)
 	}
-	if err := CreateEntry(entry2); err != nil {
+	if err := CreateEntry(entry2, testCfg.EncryptionKey); err != nil {
 		t.Fatalf("CreateEntry entry2 failed: %v", err)
 	}
 
-	entries, err := ListEntries(userID)
+	entries, err := ListEntries(userID, testCfg.EncryptionKey)
 	if err != nil {
 		t.Fatalf("ListEntries failed: %v", err)
 	}
@@ -122,7 +122,7 @@ func TestGetEntryByDate_NotFound(t *testing.T) {
 	setup(t)
 	userID := insertUser(t, "nouser", "nouser@example.com")
 	date := time.Date(2025, 11, 18, 0, 0, 0, 0, time.UTC)
-	got, err := GetEntryByDate(userID, date)
+	got, err := GetEntryByDate(userID, date, testCfg.EncryptionKey)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

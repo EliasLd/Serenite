@@ -49,6 +49,7 @@ jobs:
       - name: Run Go tests
         env:
           TEST_DB_CONN_STRING: "postgresql://test_user:test_password@localhost:5432/serenite_test?sslmode=disable"
+          ENCRYPTION_KEY: "0b33c9fb8bcd8f339c7222819b9126b97291454bbd4639094aefd2b6550501ed"
         run: go test ./... -v
 
       - name: Build backend binary
