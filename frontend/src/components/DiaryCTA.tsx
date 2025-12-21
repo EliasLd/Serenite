@@ -8,7 +8,13 @@ function isDiaryUnlocked(): boolean {
   return hours > DIARY_UNLOCK_HOUR || (hours === DIARY_UNLOCK_HOUR && minutes >= 0);
 }
 
-export default function DiaryCTA({ onAddEntry }: { onAddEntry?: () => void }) {
+export default function DiaryCTA({
+  onAddEntry,
+  hasTodayEntry,
+}: {
+  onAddEntry?: () => void,
+  hasTodayEntry: boolean,
+}) {
   const unlocked = isDiaryUnlocked();
 
   return (
@@ -18,6 +24,12 @@ export default function DiaryCTA({ onAddEntry }: { onAddEntry?: () => void }) {
           <span>
             Your diary unlocks at <strong>{DIARY_UNLOCK_HOUR}:00</strong> local time.
             Please come back tonight and celebrate your happy moments!
+          </span>
+        </div>
+      ) : hasTodayEntry ? (
+        <div className="w-full bg-sereniteCard/20 p-4 rounded shadow text-sereniteTextLight">
+          <span>
+            You've already added today's entry. Come back tomorrow to continue your positive journey!
           </span>
         </div>
       ) : (

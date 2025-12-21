@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import DashHeroSection from "../components/DashHeroSection";
@@ -11,16 +11,30 @@ export default function Dashboard() {
   const { token } = useAuth();
   if (!token) return null;
   const navigate = useNavigate();
+  const [hasTodayEntry, setHasTodayEntry] = useState<boolean>(false);
 
   function handleAddEntryClick() {
     setShowEntryForm(true);
   }
   function handleFormSuccess() {
     setShowEntryForm(false);
+    fetchTodayEntry();
   }
   function handleFormCancel() {
     setShowEntryForm(false);
   }
+
+  const fetchTodayEntry = async () => {
+    const today = new Date().toISOString().slice(0, 10);
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/entries/${today}`, {
+      headers: { "Authorization": `Bearer ${token}` }
+    });
+    setHasTodayEntry(res.ok);
+  };
+
+  useEffect(() => {
+    fetchTodayEntry();
+  }, [token]);
 
   return (
     <>
@@ -28,7 +42,7 @@ export default function Dashboard() {
       <section className="h-screen bg-sereniteBg flex flex-col items-center overflow-auto">
         <div className="mt-24 w-full max-w-2xl flex flex-col items-center mx-auto">
           <DashHeroSection />
-          <DiaryCTA onAddEntry={handleAddEntryClick} />
+          <DiaryCTA onAddEntry={handleAddEntryClick} hasTodayEntry={hasTodayEntry} />
           {showEntryForm && (
             <EntryForm
               token={token}
