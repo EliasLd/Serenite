@@ -23,7 +23,7 @@ export default function DashHeroSection() {
           <span>{error}</span>
         )}
         {!loading && !error && (
-          <span>
+          <span className="text-sereniteText">
             &quot;{quote}&quot;
           </span>
         )}

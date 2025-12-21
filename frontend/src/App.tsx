@@ -5,6 +5,7 @@ import About from "./pages/About";
 import Authentication from "./pages/Authentication";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Entries from "./pages/Entries";
 
 function App() {
   return (
@@ -19,6 +20,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/entries"
+            element={
+              <ProtectedRoute>
+                <Entries />
               </ProtectedRoute>
             }
           />
