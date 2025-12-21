@@ -68,18 +68,20 @@ export default function EntryForm({
       <div className="
         w-full
         max-w-2xl
-        bg-sereniteCard/40 backdrop-blur-md rounded-xl shadow
+        bg-sereniteBg backdrop-blur-md rounded-xl shadow
         px-4 sm:px-6 lg:px-10 py-6
         flex flex-col gap-6
+        border border-sereniteText
       ">
         <div className="text-lg font-bold mb-2 text-center">
           Today's Positive Moments
         </div>
-
+        <div className="w-full h-px bg-sereniteCard mb-5" />
         <div
           className="
             grid grid-cols-1 gap-6
             md:grid-cols-3 md:gap-8
+            bg-sereniteAccent/30 p-4 rounded-lg
           "
         >
           {[1, 2, 3].map(n => (

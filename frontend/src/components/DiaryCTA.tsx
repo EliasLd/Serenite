@@ -12,7 +12,7 @@ export default function DiaryCTA({ onAddEntry }: { onAddEntry?: () => void }) {
   const unlocked = isDiaryUnlocked();
 
   return (
-    <section className="w-full max-w-xl mx-auto mt-8 flex flex-col items-start px-6">
+    <section className="w-full max-w-xl mx-auto flex flex-col items-start px-6">
       {!unlocked ? (
         <div className="bg-sereniteCard/20 border-l-4 border-sereniteText p-4 rounded shadow text-sereniteTextLight w-full">
           <span>
