@@ -1,4 +1,6 @@
-# Serenite — A Minimalist Happiness Journal App
+# Serenite
+
+A Minimalist Happiness Journal App
 
 ![Serenite landing page sneak peek](assets/landing.png)
 
